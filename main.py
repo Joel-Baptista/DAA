@@ -2,7 +2,7 @@ from edge_cover_optimizer import EdgeCoverOptimizer
 import json
 from excel_writer import ExcelWriter
 
-nodes = [4, 5, 6, 7, 8, 9, 10, 11, 12]
+nodes = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 probability = [0.125, 0.25, 0.5, 0.75]
 method = ["optimal", "greedy"]
 
@@ -56,8 +56,6 @@ for n in nodes:
                 data["greedy iterations"].append( GO.iterations)
                 data["greedy running time"].append(GO.running_time)
 
-
-
         results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
                            "best_weight": GO.min_weight,
                            "best_selection": GO.min_edge_selection,
@@ -70,9 +68,9 @@ for n in nodes:
 ew = ExcelWriter()
 
 ew.add_data(data=data, fields=fields)
-ew.save_data(filename="three_to_thirtheen_early_stop")
+ew.save_data(filename="four_to_twelve_early_stop")
 
-with open("four_to_twelve_early_stop.json", "w") as write_file:
+with open("four_to_twelve_early_stop_lar.json", "w") as write_file:
     json.dump(results, write_file, indent=4)
 
 # GO = EdgeCoverOptimizer(n = 200, p = 0.5)
