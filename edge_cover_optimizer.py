@@ -128,13 +128,13 @@ class EdgeCoverOptimizer:
         self.min_weight_edge_cover = greedy_edge_list
         self.min_weight = min_sum
         self.min_edge_selection = selection
-        self.running_time = time.time() - st
+        self.running_time = (time.time() - st) / 60
         self.iterations = count
         self.basic_operations += 5
 
 
     def optimize_edge_cover_v2(self):
-        self.optimization = "Brute Force Optimization"
+        self.optimization = "Brute Force Optimization - Early stopping"
 
         self.iterations = 0
         self.valid_iterations = 0
@@ -198,8 +198,12 @@ class EdgeCoverOptimizer:
                 self.basic_operations += 1
                 break
 
+<<<<<<< HEAD
         self.basic_operations += 1
         self.running_time = time.time() - st
+=======
+        self.running_time = (time.time() - st) / 60
+>>>>>>> c968fce978a0cf0f34090ff40ec5c69d491b18dd
     
 
     def optimize_edge_cover(self):
@@ -261,7 +265,7 @@ class EdgeCoverOptimizer:
                     self.min_weight_edge_cover = new_g_edges
                     self.min_edge_selection = list(activation)     
 
-        self.running_time = time.time() - st
+        self.running_time = (time.time() - st) / 60
     
     def __str__(self):
 
@@ -269,20 +273,25 @@ class EdgeCoverOptimizer:
         result += f"Selected Probability: {self.probability}\n"
         result += f"Real Distribution: {round(self.num_edges/self.max_num_edges, 4)}\n"
         result += f"Edge Number: {self.num_edges}\n"
-        result += f"Expected Iterations: {self.expected_iterations}\n"
-        result += f"Expected Running time: {self.expected_iterations} miliseconds\n"
+        result += f"Maximum Iterations: {self.expected_iterations}\n"
+        result += f"Maximum Running time: {self.expected_iterations * pow(10, -4) / 60} minutes\n"
 
         return result
 
     def print_results(self):
-        result = f"Optimization technique: {self.optimization}\n"
+        result = "<=========================================================>\n"
+        result += f"Optimization technique: {self.optimization}\n"
         result += f"Best Edge Cover: {self.min_weight_edge_cover}\n"
         result += f"Best Weight: {self.min_weight}\n"
         result += f"Running Time: {self.running_time}\n"
         result += f"Performed Iterations: {self.iterations}\n"
         result += f"Performed Weight Calculations: {self.valid_iterations}\n"
+<<<<<<< HEAD
         result += f"Performed Basic Operations: {self.basic_operations}\n"
         result += f"Tested Sets: {self.sets_tested}\n"
+=======
+        result += "<=========================================================>"
+>>>>>>> c968fce978a0cf0f34090ff40ec5c69d491b18dd
 
         print(result)
 

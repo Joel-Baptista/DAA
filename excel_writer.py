@@ -3,7 +3,6 @@ import openpyxl
 class ExcelWriter:
     def __init__(self):
 
-        
         self.workbook = openpyxl.Workbook()
         self.sheet = self.workbook.active
 
