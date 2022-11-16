@@ -38,7 +38,18 @@ calculate_expected_running_time(nodes, probability, pow(10, -5), 2 * pow(10, -6)
 input()
 
 results = {}
-fields = ["nodes", "probability", "edges", "optimal solution", "greedy solution", "optimal iterations", "greedy iterations", "optimal running time", "greedy running time"]
+fields = ["nodes", 
+"probability", 
+"edges", 
+"optimal solution",
+"optimal tested sets", 
+"optimal basic operations",
+"optimal running time", 
+"greedy solution", 
+"greedy tested sets", 
+"greedy basic operations",
+"greedy running time"]
+
 data = {"nodes": [],
         "probability": [],
         "edges": [],
@@ -47,9 +58,8 @@ data = {"nodes": [],
         "optimal basic operations": [],
         "optimal running time": [],
         "greedy solution": [],
-
-        "optimal tested sets": [],
-        
+        "greedy tested sets": [],
+        "greedy basic operations": [],
         "greedy running time": []
         }
 
@@ -79,7 +89,8 @@ for n in nodes:
                 GO.optimize_edge_cover_v2()
 
                 data["optimal solution"].append(GO.min_weight)
-                data["optimal iterations"].append(GO.iterations)
+                data["optimal tested sets"].append(GO.sets_tested)
+                data["optimal basic operations"].append(GO.basic_operations)
                 data["optimal running time"].append(GO.running_time)
 
                 GO.print_results()
@@ -88,14 +99,11 @@ for n in nodes:
                 GO.greedy_edge_cover()
 
                 data["greedy solution"].append(GO.min_weight)
-                data["greedy iterations"].append( GO.iterations)
+                data["greedy tested sets"].append(GO.sets_tested)
+                data["greedy basic operations"].append(GO.basic_operations)
                 data["greedy running time"].append(GO.running_time)
 
-<<<<<<< HEAD
             GO.print_results()
-=======
-                GO.print_results()
->>>>>>> c968fce978a0cf0f34090ff40ec5c69d491b18dd
 
         results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
                            "best_weight": GO.min_weight,
@@ -107,11 +115,11 @@ for n in nodes:
 
         ew = ExcelWriter()
 
-        ew.add_data(data=data, fields=fields)
-        ew.save_data(filename="four_to_twelve_early_stop")
+        # ew.add_data(data=data, fields=fields)
+        # ew.save_data(filename="four_to_twelve_early_stop")
 
-with open("four_to_twelve_early_stop_lar.json", "w") as write_file:
-    json.dump(results, write_file, indent=4)
+# with open("four_to_twelve_early_stop_lar.json", "w") as write_file:
+#     json.dump(results, write_file, indent=4)
 
 # GO = EdgeCoverOptimizer(n = 200, p = 0.5)
 

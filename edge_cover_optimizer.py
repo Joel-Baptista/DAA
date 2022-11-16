@@ -198,12 +198,8 @@ class EdgeCoverOptimizer:
                 self.basic_operations += 1
                 break
 
-<<<<<<< HEAD
         self.basic_operations += 1
         self.running_time = time.time() - st
-=======
-        self.running_time = (time.time() - st) / 60
->>>>>>> c968fce978a0cf0f34090ff40ec5c69d491b18dd
     
 
     def optimize_edge_cover(self):
@@ -286,12 +282,8 @@ class EdgeCoverOptimizer:
         result += f"Running Time: {self.running_time}\n"
         result += f"Performed Iterations: {self.iterations}\n"
         result += f"Performed Weight Calculations: {self.valid_iterations}\n"
-<<<<<<< HEAD
         result += f"Performed Basic Operations: {self.basic_operations}\n"
         result += f"Tested Sets: {self.sets_tested}\n"
-=======
-        result += "<=========================================================>"
->>>>>>> c968fce978a0cf0f34090ff40ec5c69d491b18dd
 
         print(result)
 
