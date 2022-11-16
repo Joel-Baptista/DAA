@@ -12,10 +12,13 @@ data = {"nodes": [],
         "probability": [],
         "edges": [],
         "optimal solution": [],
-        "greedy solution": [],
-        "optimal iterations": [],
-        "greedy iterations": [],
+        "optimal tested sets": [],
+        "optimal basic operations": [],
         "optimal running time": [],
+        "greedy solution": [],
+
+        "optimal tested sets": [],
+        
         "greedy running time": []
         }
 
@@ -26,11 +29,11 @@ for n in nodes:
         GO.nodes = n
         GO.probability = p
 
-        print("Generating Graph")
+        # print("Generating Graph")
 
         GO.gnp_random_connected_graph()
 
-        print("Adding Weights")
+        # print("Adding Weights")
         GO.add_weights_to_graph()
 
         print(GO)
@@ -56,11 +59,13 @@ for n in nodes:
                 data["greedy iterations"].append( GO.iterations)
                 data["greedy running time"].append(GO.running_time)
 
+            GO.print_results()
+
         results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
                            "best_weight": GO.min_weight,
                            "best_selection": GO.min_edge_selection,
-                           "performed_iteration": GO.iterations,
-                           "performed_valid_iterations": GO.valid_iterations,
+                           "performed_sets_tested": GO.sets_tested,
+                           "performed_basic_operations": GO.basic_operations,
                            "edge_num": GO.num_edges,
                            "running_time": GO.running_time}
 

@@ -3,7 +3,7 @@ import itertools
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
-from math import comb, sin, cos, pi, ceil
+from math import comb, sin, cos, pi, ceil, floor
 import time
 import numpy as np
 from sympy.utilities.iterables import multiset_permutations
@@ -19,7 +19,8 @@ class EdgeCoverOptimizer:
         self.min_weight = None
         self.min_weight_edge_cover = None
         self.min_edge_selection = None
-        self.iterations = None
+        self.sets_tested = None
+        self.basic_operations = None
         self.valid_iterations = None
         self.running_time = None
         self.optimization = ""
@@ -65,12 +66,14 @@ class EdgeCoverOptimizer:
         list_of_nodes = []
 
         for nodes in g:
+            self.basic_operations += 1
             if nodes[0] not in list_of_nodes:
                 list_of_nodes.append(nodes[0])
             
             if nodes[1] not in list_of_nodes:
                 list_of_nodes.append(nodes[1])
 
+        self.basic_operations += 1
         return (len(list_of_nodes) == len(self.G.nodes()))
     
     def greedy_edge_cover(self):
@@ -78,14 +81,18 @@ class EdgeCoverOptimizer:
 
         st = time.time()
         count = 0
-
+        
+        self.sets_tested = 0
+        self.basic_operations += 5
         is_edge_cover = False
         greedy_edge_list = []
         edge_list = self.G.edges()
         weights_list = []
         min_sum = 0
+        added_edges_list = []
 
         for (u, v) in self.G.edges():
+            self.basic_operations += 1
             weights_list.append(self.G.edges[u,v]["weight"]) 
 
         zipped_lists = zip(weights_list, edge_list, range(0, len(edge_list)))
@@ -95,9 +102,17 @@ class EdgeCoverOptimizer:
         weights_sorted, edges_sorted, index_sorted = [ list(tuple) for tuple in  tuples]
 
         selection = [0] * len(edge_list)
+        self.basic_operations += 5
 
-        for i in range(0, len(edges_sorted)):
+        for i in range(floor(self.nodes / 2), len(edges_sorted)):
+            self.sets_tested += 1
             count += 1
+
+            if edges_sorted[i][0] in added_edges_list and edges_sorted[i][1] in added_edges_list:
+                continue
+            
+            added_edges_list.append(edges_sorted[i][0])
+            added_edges_list.append(edges_sorted[i][1])
 
             greedy_edge_list.append(edges_sorted[i])
             min_sum += weights_sorted[i]
@@ -106,6 +121,7 @@ class EdgeCoverOptimizer:
 
             is_edge_cover = self.check_edge_cover(greedy_edge_list)
 
+            self.basic_operations += 4
             if is_edge_cover:
                 break
 
@@ -114,6 +130,7 @@ class EdgeCoverOptimizer:
         self.min_edge_selection = selection
         self.running_time = time.time() - st
         self.iterations = count
+        self.basic_operations += 5
 
 
     def optimize_edge_cover_v2(self):
@@ -121,6 +138,8 @@ class EdgeCoverOptimizer:
 
         self.iterations = 0
         self.valid_iterations = 0
+        self.basic_operations = 0
+        self.sets_tested = 0
 
         st = time.time()
         self.min_weight = None
@@ -129,9 +148,14 @@ class EdgeCoverOptimizer:
         count = 0
         prev_percent = 0
 
-        for n in range(0, self.num_edges + 1):
+        self.basic_operations += 9
+
+        for n in range(floor(self.nodes / 2), self.num_edges + 1):
             lst = [1] * n + [0] * (self.num_edges - n)
+            self.basic_operations += 1
             for perm in multiset_permutations(lst):
+                self.sets_tested += 1 
+                self.basic_operations += 4
                 self.iterations += 1
                 count += 1
                 if count/self.expected_iterations * 100 > prev_percent :
@@ -146,6 +170,7 @@ class EdgeCoverOptimizer:
                     edge_num_first_edge_cover = n
 
                 if is_edge_cover:
+                    self.basic_operations += 9
                     if n > edge_num_first_edge_cover and edge_num_first_edge_cover is not None:
                         print("Stop Searching")
                         finish_search = True
@@ -154,6 +179,7 @@ class EdgeCoverOptimizer:
                     self.valid_iterations += 1
                     weight_sum = 0
                     for (u, v) in new_g_edges:
+                        self.basic_operations += 1
                         weight_sum += self.G.edges[u, v]['weight']
                     
                     if self.min_weight is None:
@@ -169,8 +195,10 @@ class EdgeCoverOptimizer:
                         self.min_edge_selection = list(perm)     
 
             if finish_search:
+                self.basic_operations += 1
                 break
 
+        self.basic_operations += 1
         self.running_time = time.time() - st
     
 
@@ -253,6 +281,8 @@ class EdgeCoverOptimizer:
         result += f"Running Time: {self.running_time}\n"
         result += f"Performed Iterations: {self.iterations}\n"
         result += f"Performed Weight Calculations: {self.valid_iterations}\n"
+        result += f"Performed Basic Operations: {self.basic_operations}\n"
+        result += f"Tested Sets: {self.sets_tested}\n"
 
         print(result)
 
