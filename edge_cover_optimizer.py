@@ -83,7 +83,6 @@ class EdgeCoverOptimizer:
         count = 0
         
         self.sets_tested = 0
-        self.basic_operations += 5
         is_edge_cover = False
         greedy_edge_list = []
         edge_list = self.G.edges()
@@ -93,20 +92,22 @@ class EdgeCoverOptimizer:
 
         for (u, v) in self.G.edges():
             self.basic_operations += 1
-            weights_list.append(self.G.edges[u,v]["weight"]) 
+            weights_list.append(self.G.edges[u, v]["weight"])
 
         zipped_lists = zip(weights_list, edge_list, range(0, len(edge_list)))
         sorted_pairs = sorted(zipped_lists)
 
         tuples = zip(*sorted_pairs)
-        weights_sorted, edges_sorted, index_sorted = [ list(tuple) for tuple in  tuples]
+        self.basic_operations += len(sorted_pairs)
+        weights_sorted, edges_sorted, index_sorted = [list(tuple) for tuple in tuples]
 
         selection = [0] * len(edge_list)
-        self.basic_operations += 5
 
         for i in range(floor(self.nodes / 2), len(edges_sorted)):
             self.sets_tested += 1
             count += 1
+
+            self.basic_operations += 1
 
             if edges_sorted[i][0] in added_edges_list and edges_sorted[i][1] in added_edges_list:
                 continue
@@ -121,7 +122,6 @@ class EdgeCoverOptimizer:
 
             is_edge_cover = self.check_edge_cover(greedy_edge_list)
 
-            self.basic_operations += 4
             if is_edge_cover:
                 break
 
@@ -130,8 +130,6 @@ class EdgeCoverOptimizer:
         self.min_edge_selection = selection
         self.running_time = (time.time() - st) / 60
         self.iterations = count
-        self.basic_operations += 5
-
 
     def optimize_edge_cover_v2(self):
         self.optimization = "Brute Force Optimization - Early stopping"
@@ -148,8 +146,6 @@ class EdgeCoverOptimizer:
         count = 0
         prev_percent = 0
 
-        self.basic_operations += 9
-
         for n in range(floor(self.nodes / 2), self.num_edges + 1):
             lst = [1] * n + [0] * (self.num_edges - n)
             self.basic_operations += 1
@@ -158,7 +154,7 @@ class EdgeCoverOptimizer:
                 self.basic_operations += 4
                 self.iterations += 1
                 count += 1
-                if count/self.expected_iterations * 100 > prev_percent :
+                if count/self.expected_iterations * 100 > prev_percent:
                     print(str(prev_percent) + "%") 
                     prev_percent += 10
 
@@ -170,7 +166,6 @@ class EdgeCoverOptimizer:
                     edge_num_first_edge_cover = n
 
                 if is_edge_cover:
-                    self.basic_operations += 9
                     if n > edge_num_first_edge_cover and edge_num_first_edge_cover is not None:
                         print("Stop Searching")
                         finish_search = True
@@ -178,6 +173,7 @@ class EdgeCoverOptimizer:
                     
                     self.valid_iterations += 1
                     weight_sum = 0
+
                     for (u, v) in new_g_edges:
                         self.basic_operations += 1
                         weight_sum += self.G.edges[u, v]['weight']
@@ -195,10 +191,8 @@ class EdgeCoverOptimizer:
                         self.min_edge_selection = list(perm)     
 
             if finish_search:
-                self.basic_operations += 1
                 break
 
-        self.basic_operations += 1
         self.running_time = time.time() - st
     
 

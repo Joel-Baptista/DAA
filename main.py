@@ -30,25 +30,26 @@ def calculate_expected_running_time(nodes_for_time, probability_for_time, speed,
     print("It is estimated for the search to last " + str(day) + " days and " + str(hour) + "h" + str(minutes) + "m" + str(seconds) + "s")
 
 
-nodes = [13]
+nodes = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 probability = [0.125, 0.25, 0.5, 0.75]
 method = ["optimal", "greedy"]
+experiment = "four_to_thirteen"
 
 calculate_expected_running_time(nodes, probability, pow(10, -5), 2 * pow(10, -6))
 input()
 
 results = {}
 fields = ["nodes", 
-"probability", 
-"edges", 
-"optimal solution",
-"optimal tested sets", 
-"optimal basic operations",
-"optimal running time", 
-"greedy solution", 
-"greedy tested sets", 
-"greedy basic operations",
-"greedy running time"]
+            "probability",
+            "edges",
+            "optimal solution",
+            "optimal tested sets",
+            "optimal basic operations",
+            "optimal running time",
+            "greedy solution",
+            "greedy tested sets",
+            "greedy basic operations",
+            "greedy running time"]
 
 data = {"nodes": [],
         "probability": [],
@@ -93,6 +94,17 @@ for n in nodes:
                 data["optimal basic operations"].append(GO.basic_operations)
                 data["optimal running time"].append(GO.running_time)
 
+                results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
+                                          "best_weight": GO.min_weight,
+                                          "best_selection": GO.min_edge_selection,
+                                          "performed_sets_tested": GO.sets_tested,
+                                          "performed_basic_operations": GO.basic_operations,
+                                          "edge_num": GO.num_edges,
+                                          "running_time": GO.running_time}
+
+                with open(f"{experiment}_optimal.json", "w") as write_file:
+                    json.dump(results, write_file, indent=4)
+
                 GO.print_results()
             elif m == "greedy":
                 
@@ -103,23 +115,24 @@ for n in nodes:
                 data["greedy basic operations"].append(GO.basic_operations)
                 data["greedy running time"].append(GO.running_time)
 
-            GO.print_results()
+                results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
+                                          "best_weight": GO.min_weight,
+                                          "best_selection": GO.min_edge_selection,
+                                          "performed_sets_tested": GO.sets_tested,
+                                          "performed_basic_operations": GO.basic_operations,
+                                          "edge_num": GO.num_edges,
+                                          "running_time": GO.running_time}
 
-        results[f"({n}, {p})"] = {"best_edge_cover": GO.min_weight_edge_cover,
-                           "best_weight": GO.min_weight,
-                           "best_selection": GO.min_edge_selection,
-                           "performed_sets_tested": GO.sets_tested,
-                           "performed_basic_operations": GO.basic_operations,
-                           "edge_num": GO.num_edges,
-                           "running_time": GO.running_time}
+                with open(f"{experiment}_greedy.json", "w") as write_file:
+                    json.dump(results, write_file, indent=4)
+
+                GO.print_results()
 
         ew = ExcelWriter()
 
-        # ew.add_data(data=data, fields=fields)
-        # ew.save_data(filename="four_to_twelve_early_stop")
+        ew.add_data(data=data, fields=fields)
+        ew.save_data(filename="four_to_thirteen")
 
-# with open("four_to_twelve_early_stop_lar.json", "w") as write_file:
-#     json.dump(results, write_file, indent=4)
 
 # GO = EdgeCoverOptimizer(n = 200, p = 0.5)
 
